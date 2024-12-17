@@ -5,6 +5,8 @@ import Layout from "../Layout/Home/Layout";
 // Lazy loading
 const Auth = lazy(() => import("../pages/Auth/Auth"));
 const Home = lazy(() => import("../pages/Home/Home"));
+const Profile = lazy(() => import("../pages/Profile/Profile"));
+const EditProfile = lazy(() => import("../pages/Edit-Profile/Edit"));
 
 const Router = createBrowserRouter([
   {
@@ -22,6 +24,14 @@ const Router = createBrowserRouter([
       {
         path: "feeds",
         element: <Home />
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfile />
       },
     ],
   },

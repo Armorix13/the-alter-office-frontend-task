@@ -1,8 +1,10 @@
 import FeedCard from "../../components/Feeds/FeedCard";
+import AddPost from "../../components/Post/AddPost";
 
 const Home = () => {
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col relative">
+      <AddPost />
       <div className="font-extrabold text-[30x] fixed">Feeds</div>
       <div className="grid grid-cols-1 mt-[40px] gap-4">
         <FeedCard
