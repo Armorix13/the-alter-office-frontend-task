@@ -26,9 +26,13 @@ const Auth: React.FC = () => {
                             </div>
                             <div className="text-[26px] sm:text-[20px] font-[600] ml-2">Vibesnap</div>
                         </div>
+
+                        <div className="text-[16px] text-center">
+                        Moments That Matter, Shared Forever.
+                        </div>
                     </div>
 
-                    <div onClick={handleGoogleLogin} className="text-white cursor-pointer flex p-2 gap-2 justify-center items-center w-[232px] sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] bg-black rounded-full">
+                    <div onClick={handleGoogleLogin} className="text-white mt-7 cursor-pointer flex p-2 gap-2 justify-center items-center w-[232px] sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] bg-black rounded-full">
                         <div>
                             <img
                                 src={Google}
