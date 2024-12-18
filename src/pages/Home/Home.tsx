@@ -1,12 +1,15 @@
 import FeedCard from "../../components/Feeds/FeedCard";
 import AddPost from "../../components/Post/AddPost";
 import Hamburger from "../../assets/Icon/Hamburger.png";
-import Profile from "../../assets/Sidebar/profile.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import MobileMenu from "../../components/Sidebar/MobileMenu";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { BASE_URL } from "../../api";
 
 const Home = () => {
+  const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [openMenu, closeMenu] = useState<Boolean>(false);
   const handleMenuToggle = () => {
@@ -24,7 +27,7 @@ const Home = () => {
           </div>
           <img
             onClick={() => navigate("/home/profile")}
-            src={Profile}
+            src={`${BASE_URL}${userDetail?.profileImage}`}
             alt={`avatar`}
             className="w-[50px] h-[50px] rounded-full object-cover"
           />

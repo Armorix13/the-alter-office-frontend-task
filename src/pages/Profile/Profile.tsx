@@ -1,9 +1,10 @@
 import PostCard from "../../components/Post/MyPost";
-import Cover from "../../assets/Profile/Cover.png";
-import Profile from "../../assets/Sidebar/profile.png";
 import AddPost from "../../components/Post/AddPost";
 import Back from "../../assets/Icon/Back.png";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../Redux/store";
+import { useSelector } from "react-redux";
+import { BASE_URL } from "../../api";
 
 const posts = [
   {
@@ -49,6 +50,7 @@ const posts = [
 ];
 
 const ProfilePage = () => {
+  const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const renderPosts = () => {
     const pattern = ["small", "large", "large", "small", "small"];
@@ -95,17 +97,17 @@ const ProfilePage = () => {
           Edit Profile
         </button>
         <img
-          src={Cover}
+          src={`${BASE_URL}${userDetail?.coverImage}`}
           alt="Background"
           className="w-full h-40 object-cover rounded-bl-xl rounded-br-xl"
         />
 
         <div className="absolute top-28 left-2">
-          <img src={Profile} alt="Profile" className="rounded-full w-24 h-24" />
+          <img src={`${BASE_URL}${userDetail?.profileImage}`} alt="Profile" className="rounded-full w-24 h-24" />
         </div>
 
         <div className="mt-16">
-          <h1 className="text-xl font-bold">Sakshi Agarwal</h1>
+          <h1 className="text-xl font-bold">{userDetail?.fullName}</h1>
           <p className="text-gray-500">
             Just someone who loves designing, sketching, and finding beauty in
             the little things 💞
