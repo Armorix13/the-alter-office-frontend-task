@@ -8,13 +8,16 @@ import { RootState } from "../../Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdate } from "../../hooks/useUpdate";
 import { BASE_URL, updateUserData } from "../../api";
-import { setUserDetail } from "../../Redux/reducers/userSlice";
+import { setUserDetail, User } from "../../Redux/reducers/userSlice";
 import { headers } from "../../utils";
 
+interface UpdateUserResponse {
+  userExists: User;
+}
 const Edit = () => {
   const dispatch = useDispatch();
   const { userDetail } = useSelector((state: RootState) => state.user);
-  const { executeUpdate, data } = useUpdate();
+  const { executeUpdate, data }: { executeUpdate: Function, data: UpdateUserResponse | null } = useUpdate();
   const navigate = useNavigate();
   const [name, setName] = useState<string | any>(userDetail?.fullName);
   const [bio, setBio] = useState<string>(
