@@ -28,7 +28,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                     value={value}
                     onChange={onChange}
                     rows={1}
-                    className="border-0 text-[14px] font-[600] border-b border-gray-300 focus:ring-0 focus:border-black text-gray-900 p-0 mt-1 text-base resize-none"
+                    className="border-0 focus:outline-none text-[14px] font-[600] border-b border-gray-300 text-gray-900 p-0 mt-1 text-base resize-none"
                     placeholder={placeholder}
                 />
             ) : (
@@ -37,7 +37,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                     type="text"
                     value={value}
                     onChange={onChange}
-                    className="border-0 text-[14px] font-[600] border-b border-gray-300 focus:ring-0 focus:border-black text-gray-900 p-0 mt-1 text-base"
+                    className="border-0 text-[14px] focus:outline-none font-[600] border-b border-gray-300 p-0 mt-1 text-base"
                     placeholder={placeholder}
                 />
             )}
