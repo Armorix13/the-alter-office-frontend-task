@@ -6,7 +6,9 @@ import { useState } from "react";
 import MobileMenu from "../../components/Sidebar/MobileMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { BASE_URL } from "../../api";
+import { BASE_URL } from "../../api/index";
+import Profile from "../../assets/Sidebar/profile.png";
+import { useGetPostQuery } from "../../api";
 
 const Home = () => {
   const { userDetail } = useSelector((state: RootState) => state.user);
@@ -15,6 +17,9 @@ const Home = () => {
   const handleMenuToggle = () => {
     closeMenu(!openMenu);
   };
+  const { data: posts } = useGetPostQuery();
+  console.log({ posts });
+
   return (
     <>
       <div className="h-full w-full flex flex-col relative">
@@ -27,7 +32,7 @@ const Home = () => {
           </div>
           <img
             onClick={() => navigate("/home/profile")}
-            src={`${BASE_URL}${userDetail?.profileImage}`}
+            src={userDetail?.profileImage ? `${BASE_URL}${userDetail?.profileImage}` : Profile}
             alt={`avatar`}
             className="w-[50px] h-[50px] rounded-full object-cover"
           />

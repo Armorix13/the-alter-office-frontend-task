@@ -4,7 +4,9 @@ import Back from "../../assets/Icon/Back.png";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { BASE_URL } from "../../api";
+import { BASE_URL } from "../../api/index";
+import Cover from "../../assets/Profile/Cover.png";
+import Profile from "../../assets/Sidebar/profile.png";
 
 const posts = [
   {
@@ -97,13 +99,13 @@ const ProfilePage = () => {
           Edit Profile
         </button>
         <img
-          src={`${BASE_URL}${userDetail?.coverImage}`}
+          src={userDetail?.coverImage ? `${BASE_URL}${userDetail?.coverImage}` : Cover}
           alt="Background"
           className="w-full h-40 object-cover rounded-bl-xl rounded-br-xl"
         />
 
         <div className="absolute top-28 left-2">
-          <img src={`${BASE_URL}${userDetail?.profileImage}`} alt="Profile" className="rounded-full w-24 h-24" />
+          <img src={userDetail?.profileImage ? `${BASE_URL}${userDetail?.profileImage}` : Profile} alt="Profile" className="rounded-full w-24 h-24" />
         </div>
 
         <div className="mt-16">

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleauthProvider } from "../../Firebase/Firebase";
 import { usePostApi } from "../../hooks/usePost";
-import { socialLogin } from "../../api";
+import { socialLogin } from "../../api/indexold";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setAuthenticated } from "../../Redux/reducers/userSlice";
@@ -76,6 +76,7 @@ const Auth: React.FC = () => {
             }
         }
     }, [data, navigate]);
+    
 
     return (
         <div className="h-screen w-screen flex justify-center items-center bg-[#444444]">

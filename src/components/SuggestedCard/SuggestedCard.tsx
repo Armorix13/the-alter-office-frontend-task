@@ -7,10 +7,9 @@ interface SuggestedUserCardProps {
 }
 
 const SuggestedUserCard: React.FC<SuggestedUserCardProps> = ({
-  name,
-  photoUrl,
+  name
 }) => {
-  console.log("photoUrl", photoUrl);
+  // console.log("photoUrl", photoUrl);
   return (
     <div className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition">
       <img

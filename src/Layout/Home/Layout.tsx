@@ -1,28 +1,22 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import RightSideBar from "../../components/Sidebar/RightSideBar";
-import { useFetch } from "../../hooks/useFetch";
-import { getUserDetails } from "../../api";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAuthenticated, setUserDetail } from "../../Redux/reducers/userSlice";
-import { headers } from "../../utils";
+import { useGetUserDetailsQuery } from "../../api";
 
 const Layout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { data, error } = useFetch<any>(getUserDetails, headers);
-
+  const { data: userData } = useGetUserDetailsQuery();
   useEffect(() => {
-    if (error) {
-      navigate("/");
-    }
-    if (data) {
-      dispatch(setUserDetail(data?.userExists));
+    if (userData) {
+      dispatch(setUserDetail(userData?.userExists));
       dispatch(setAuthenticated(true));
     }
-  }, [data, error, navigate, dispatch]);
+  }, [userData, navigate, dispatch]);
+
   return (
     <div className="h-screen w-screen overflow-hidden flex gap-2 p-2">
       <div className="hidden lg:w-[20%] lg:block w-full">

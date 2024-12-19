@@ -6,18 +6,16 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import { RootState } from "../../Redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdate } from "../../hooks/useUpdate";
-import { BASE_URL, updateUserData } from "../../api";
-import { setUserDetail, User } from "../../Redux/reducers/userSlice";
-import { headers } from "../../utils";
+import { BASE_URL } from "../../api/index";
+import { setUserDetail } from "../../Redux/reducers/userSlice";
+import Cover from "../../assets/Profile/Cover.png";
+import Profile from "../../assets/Sidebar/profile.png";
+import { useUpdateUserMutation } from "../../api";
 
-interface UpdateUserResponse {
-  userExists: User;
-}
+
 const Edit = () => {
   const dispatch = useDispatch();
   const { userDetail } = useSelector((state: RootState) => state.user);
-  const { executeUpdate, data }: { executeUpdate: Function, data: UpdateUserResponse | null } = useUpdate();
   const navigate = useNavigate();
   const [name, setName] = useState<string | any>(userDetail?.fullName);
   const [bio, setBio] = useState<string>(
@@ -28,6 +26,7 @@ const Edit = () => {
   const [profile, setProfile] = useState<any>(null);
   const coverImageInputRef = useRef<HTMLInputElement | null>(null);
   const profileImageInputRef = useRef<HTMLInputElement | null>(null);
+  const [updateUser] = useUpdateUserMutation();
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -51,8 +50,6 @@ const Edit = () => {
     }
   };
 
-
-
   const handleSave = async (): Promise<void> => {
     setLoading(true);
     const formData = new FormData();
@@ -61,7 +58,11 @@ const Edit = () => {
     formData.append("fullName", name);
     formData.append("boi", bio);
     try {
-      await executeUpdate(updateUserData, formData, headers);
+      const response = await updateUser(formData).unwrap();
+      if (response) {
+        dispatch(setUserDetail(response?.userExists));
+      }
+      console.log("Profile updated successfully:", response);
       navigate("/home/profile");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -73,13 +74,6 @@ const Edit = () => {
   useEffect(() => {
     setName(userDetail?.fullName);
   }, [userDetail]);
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setUserDetail(data?.userExists));
-    }
-  }, [data])
-
 
   return (
     <div className="h-full w-full relative flex justify-center">
@@ -115,7 +109,7 @@ const Edit = () => {
           <img src={EditIcon} alt="Edit" className="w-[20px] h-[20px]" />
         </div>
         <img
-          src={coverImage ? URL.createObjectURL(coverImage) : `${BASE_URL}${userDetail?.coverImage}`}
+          src={coverImage ? URL.createObjectURL(coverImage) : userDetail?.coverImage ? `${BASE_URL}${userDetail?.coverImage}` : Cover}
           alt="Background"
           className="w-full h-40 object-cover rounded-bl-xl rounded-br-xl"
         />
@@ -131,8 +125,7 @@ const Edit = () => {
         <div className="absolute top-28 left-2">
           <img
             src={
-              profile ? URL.createObjectURL(profile) : `${BASE_URL}${userDetail?.profileImage}`
-            }
+              profile ? URL.createObjectURL(profile) : userDetail?.profileImage ? `${BASE_URL}${userDetail?.profileImage}` : Profile}
             alt="Profile"
             className="rounded-full w-24 h-24"
           />
