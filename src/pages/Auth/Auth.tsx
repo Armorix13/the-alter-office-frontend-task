@@ -79,7 +79,7 @@ const Auth: React.FC = () => {
 
     return (
         <div className="h-screen w-screen flex justify-center items-center bg-[#444444]">
-            <div className="h-[520px] w-[360px] sm:w-[320px] md:w-[400px] lg:w-[400px] rounded-3xl relative">
+            <div className="h-[520px] flex justify-center w-[360px] sm:w-[320px] md:w-[400px] lg:w-[400px] rounded-3xl relative">
                 <div className="h-[250px] max-720:w-[325px] md:w-[360px] lg:w-[360px] rounded-tl-[63px] rounded-tr-[63px] bg-[#ffffff] absolute bottom-[-40px] flex flex-col items-center">
                     <div className="w-[286px] sm:w-[260px] md:w-[280px] lg:w-[320px] h-[62px]">
                         <div className="flex w-full justify-center mt-2">
