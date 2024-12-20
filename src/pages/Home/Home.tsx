@@ -2,23 +2,60 @@ import FeedCard from "../../components/Feeds/FeedCard";
 import AddPost from "../../components/Post/AddPost";
 import Hamburger from "../../assets/Icon/Hamburger.png";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileMenu from "../../components/Sidebar/MobileMenu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { BASE_URL } from "../../api/index";
 import Profile from "../../assets/Sidebar/profile.png";
-import { useGetPostQuery } from "../../api";
+import { useGetPostsQuery } from "../../api";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {
+  appendPosts,
+  setHasMore,
+  setPagination,
+} from "../../Redux/reducers/feedSlice";
 
 const Home = () => {
+  const dispatch = useDispatch();
   const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [openMenu, closeMenu] = useState<Boolean>(false);
   const handleMenuToggle = () => {
     closeMenu(!openMenu);
   };
-  const { data: posts } = useGetPostQuery();
-  console.log({ posts });
+  const { posts, hasMore, currentPage, totalPages } = useSelector(
+    (state: RootState) => state.feed
+  );
+  
+  const [page, setPage] = useState(currentPage);
+
+  const { data: postdata ,isFetching} = useGetPostsQuery({
+    page,
+    limit: 2,
+  });
+
+  useEffect(() => {
+    if (postdata) {
+      dispatch(appendPosts(postdata.posts));
+      dispatch(
+        setPagination({
+          currentPage: postdata.currentPage,
+          totalPages: postdata.totalPages,
+        })
+      );
+      dispatch(setHasMore(postdata.currentPage < postdata.totalPages));
+    }
+  }, [postdata, dispatch ,isFetching]);
+  
+  
+
+  const fetchMoreData = () => {
+    if (page < totalPages && !isFetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
 
   return (
     <>
@@ -32,7 +69,11 @@ const Home = () => {
           </div>
           <img
             onClick={() => navigate("/home/profile")}
-            src={userDetail?.profileImage ? `${BASE_URL}${userDetail?.profileImage}` : Profile}
+            src={
+              userDetail?.profileImage
+                ? `${BASE_URL}${userDetail?.profileImage}`
+                : Profile
+            }
             alt={`avatar`}
             className="w-[50px] h-[50px] rounded-full object-cover"
           />
@@ -40,43 +81,44 @@ const Home = () => {
         <AddPost />
         <div className="font-extrabold text-[30x] mt-10">Feeds</div>
         <div className="grid grid-cols-1 mt-[30px] gap-4">
-          <FeedCard
-            username="Aarav"
-            userImage="https://randomuser.me/api/portraits/men/75.jpg"
-            postTime="2 hours ago"
-            content="Just arrived in New York City! Excited to explore the sights, sounds, and energy of this amazing place. 🗽"
-            hashtags="#NYC #Travel"
-            imageUrls={[
-              "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-              "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-            ]}
-            likes={67}
-          />
-          <FeedCard
-            username="Aarav"
-            userImage="https://randomuser.me/api/portraits/men/75.jpg"
-            postTime="2 hours ago"
-            content="Just arrived in New York City! Excited to explore the sights, sounds, and energy of this amazing place. 🗽"
-            hashtags="#NYC #Travel"
-            imageUrls={[
-              "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            ]}
-            likes={67}
-          />
-          <FeedCard
-            username="Aarav"
-            userImage="https://randomuser.me/api/portraits/men/75.jpg"
-            postTime="2 hours ago"
-            content="Just arrived in New York City! Excited to explore the sights, sounds, and energy of this amazing place. 🗽"
-            hashtags="#NYC #Travel"
-            imageUrls={[
-              "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-              "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
-            ]}
-            likes={67}
-          />
+          <InfiniteScroll
+            dataLength={posts.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={<h4>Loading...</h4>}
+            scrollThreshold={0.9}
+            scrollableTarget="scrollableDiv"
+          >
+            <div
+              id="scrollableDiv"
+              className="grid grid-cols-1 mt-[30px] gap-4"
+            >
+              {posts.map((post: any) => (
+                <FeedCard
+                  key={post._id}
+                  username={post.userId.fullName}
+                  userImage={post.userId.profileImage}
+                  postTime={post.createdAt}
+                  content={post.desc}
+                  hashtags={post.hashtags}
+                  imageUrls={post.images}
+                  likes={post.likeCount}
+                />
+              ))}
+            </div>
+          </InfiniteScroll>
+          {/* {postdata?.posts?.map((post: any) => (
+            <FeedCard
+              key={post.id}
+              username={post.userId.fullName}
+              userImage={post.userId.profileImage}
+              postTime={post.createdAt}
+              content={post.desc}
+              hashtags={post.hashtags}
+              imageUrls={post.images}
+              likes={post.likeCount}
+            />
+          ))} */}
         </div>
       </div>
       {openMenu && <MobileMenu />}

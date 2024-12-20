@@ -49,14 +49,14 @@ const Create = () => {
     setCurrentindex(swiper.activeIndex);
   };
 
-  const handlePost = (): void => {
+  const handlePost = async() => {
     try {
       const formData = new FormData();
       formData.append("desc", bio);
       mediaFiles.forEach((file) => {
         formData.append(`images`, file);
       });
-      const response = createPost(formData).unwrap();
+      const response =await createPost(formData).unwrap();
       if (response) {
         console.log("Post created successfully:", response);
       }

@@ -1,81 +1,80 @@
-import React, { useEffect } from "react";
+// import React, /* { useEffect  */} from "react";
 import LoginImage from "../../assets/Login/Login.png";
 import Google from "../../assets/Login/Google.png";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleauthProvider } from "../../Firebase/Firebase";
-import { usePostApi } from "../../hooks/usePost";
-import { socialLogin } from "../../api/indexold";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { setAuthenticated } from "../../Redux/reducers/userSlice";
+// import { usePostApi } from "../../hooks/usePost";
+// import { toast } from "react-toastify";
+// import { useDispatch } from "react-redux";
+// import { setAuthenticated } from "../../Redux/reducers/userSlice";
 
-interface LoginRequest {
-    fullName: string | null;
-    socialId: string | null;
-    socialType: number;
-    email: string | null;
-    profileImage: string | null;
-    isEmailVerified: boolean;
-}
+// interface LoginRequest {
+//     fullName: string | null;
+//     socialId: string | null;
+//     socialType: number;
+//     email: string | null;
+//     profileImage: string | null;
+//     isEmailVerified: boolean;
+// }
 
-interface LoginResponse {
-    success: boolean;
-    message: string;
-    userExists: {
-        _id: string;
-        fullName: string;
-        profileImage: string;
-        coverImage: string;
-        boi: string;
-        isEmailVerified: boolean;
-        socialId: string;
-        socialType: number;
-        isDeleted: boolean;
-        createdAt: string;
-        updatedAt: string;
-        __v: number;
-    };
-    token: string;
-}
+// interface LoginResponse {
+//     success: boolean;
+//     message: string;
+//     userExists: {
+//         _id: string;
+//         fullName: string;
+//         profileImage: string;
+//         coverImage: string;
+//         boi: string;
+//         isEmailVerified: boolean;
+//         socialId: string;
+//         socialType: number;
+//         isDeleted: boolean;
+//         createdAt: string;
+//         updatedAt: string;
+//         __v: number;
+//     };
+//     token: string;
+// }
 
 const Auth: React.FC = () => {
-    const dispatch = useDispatch();
-    const { executePost, data } = usePostApi<LoginRequest, LoginResponse>();
-    const navigate = useNavigate();
+    // const dispatch = useDispatch();
+    // const { executePost, data } = usePostApi<LoginRequest, LoginResponse>();
+    // const navigate = useNavigate();
     const handleGoogleLogin = async () => {
         try {
             const result = await signInWithPopup(auth, googleauthProvider);
             if (result) {
                 console.log("Google login successful:", result);
-                const loginData: LoginRequest = {
-                    fullName: result.user.displayName,
-                    socialId: result.user.uid,
-                    socialType: 1,
-                    email: result.user.email,
-                    profileImage: result.user.photoURL,
-                    isEmailVerified: result.user.emailVerified,
-                };
-                await executePost(socialLogin, loginData);
+                // const loginData: LoginRequest = {
+                //     fullName: result.user.displayName,
+                //     socialId: result.user.uid,
+                //     socialType: 1,
+                //     email: result.user.email,
+                //     profileImage: result.user.photoURL,
+                //     isEmailVerified: result.user.emailVerified,
+                // };
+                // await executePost(socialLogin , loginData);
             }
         } catch (error) {
             console.error("Error during Google login:", error);
         }
     };
 
-    useEffect(() => {
-        if (data) {
-            console.log("API response:", data);
-            if (data.success) {
-                dispatch(setAuthenticated(true));
-                localStorage.setItem("token", data.token);
-                toast.success(data?.message);
-                navigate("/home");
-            } else {
-                console.error("Login failed:", data.message);
-            }
-        }
-    }, [data, navigate]);
+    // useEffect(() => {
+    //     if (data) {
+    //         console.log("API response:", data);
+    //         if (data.success) {
+    //             dispatch(setAuthenticated(true));
+    //             localStorage.setItem("token", data.token);
+    //             toast.success(data?.message);
+    //             navigate("/home");
+    //         } else {
+    //             console.error("Login failed:", data.message);
+    //         }
+    //     }
+    // }, [data, navigate]);
     
 
     return (

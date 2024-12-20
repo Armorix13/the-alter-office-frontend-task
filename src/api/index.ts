@@ -8,7 +8,12 @@ interface ApiResponse<T> {
   data: T;
   message: string;
   success: boolean;
+  posts?: any;
+  currentPage?: number|any,
+  totalPages?: number|any,
+  limit?: number|any,
 }
+
 
 enum Tags {
   Posts = "Posts",
@@ -69,10 +74,11 @@ export const api = createApi({
       }),
       invalidatesTags: [Tags.Posts]
     }),
-    getPost: builder.query<ApiResponse<any>, void>({
-      query: () => ({
+    getPosts: builder.query<ApiResponse<any>, { page: number, limit: number }>({
+      query: ({ page, limit }) => ({
         url: `/post/get`,
         method: "GET",
+        params: { page, limit },
       }),
       providesTags: [Tags.Posts],
     }),
@@ -93,7 +99,7 @@ export const api = createApi({
 });
 
 export const {
-  useGetPostQuery,
+  useGetPostsQuery,
   useGetUserDetailsQuery,
   useCreatePostMutation,
   useUpdateUserMutation

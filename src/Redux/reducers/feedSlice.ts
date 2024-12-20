@@ -1,26 +1,46 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FeedState {
-  posts: string[];
-  loading: boolean;
+  posts: any[];
+  hasMore: boolean;
+  isLoading: boolean;
+  currentPage: number;
+  totalPages: number;
 }
 const initialState: FeedState = {
   posts: [],
-  loading: false,
+  hasMore: true,
+  isLoading: false,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 const feedSlice = createSlice({
   name: "feed",
   initialState,
   reducers: {
-    setFeed: (state, action: PayloadAction<string[]>) => {
+    setPosts: (state, action: PayloadAction<any[]>) => {
       state.posts = action.payload;
     },
+    appendPosts: (state, action: PayloadAction<any[]>) => {
+      state.posts = [...state.posts, ...action.payload];
+    },
+    setPagination: (
+      state,
+      action: PayloadAction<{ currentPage: number; totalPages: number }>
+    ) => {
+      state.currentPage = action.payload.currentPage;
+      state.totalPages = action.payload.totalPages;
+    },
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
+      state.isLoading = action.payload;
+    },
+    setHasMore: (state, action: PayloadAction<boolean>) => {
+      state.hasMore = action.payload;
     },
   },
 });
 
-export const { setFeed, setLoading } = feedSlice.actions;
+export const { appendPosts, setHasMore, setLoading, setPagination, setPosts } =
+  feedSlice.actions;
 export default feedSlice.reducer;
