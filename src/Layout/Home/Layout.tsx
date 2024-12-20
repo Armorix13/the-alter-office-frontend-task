@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import RightSideBar from "../../components/Sidebar/RightSideBar";
 import { useEffect } from "react";
@@ -7,7 +7,6 @@ import { setAuthenticated, setUserDetail } from "../../Redux/reducers/userSlice"
 import { useGetUserDetailsQuery } from "../../api";
 
 const Layout = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data: userData } = useGetUserDetailsQuery();
   useEffect(() => {
@@ -15,7 +14,7 @@ const Layout = () => {
       dispatch(setUserDetail(userData?.userExists));
       dispatch(setAuthenticated(true));
     }
-  }, [userData, navigate, dispatch]);
+  }, [userData]);
 
   return (
     <div className="h-screen w-screen overflow-hidden flex gap-2 p-2">

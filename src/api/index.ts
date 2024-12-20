@@ -9,18 +9,28 @@ interface ApiResponse<T> {
   message: string;
   success: boolean;
   posts?: any;
-  currentPage?: number|any,
-  totalPages?: number|any,
-  limit?: number|any,
+  currentPage?: number | any,
+  totalPages?: number | any,
+  limit?: number | any,
+  pagination?: {
+    totalPosts: number,
+    currentPage: number,
+    totalPages: number,
+    limit: number,
+  }
+}
+
+interface LikeApiResponse {
+  message: string;
+  success: boolean;
 }
 
 
 enum Tags {
-  Posts = "Posts",
+  Posts = "Posts"
 }
 
-// const LIMIT = 20;
-// const INDEX = 0;
+export const LIMIT = 20;
 // Base query function for making requests
 const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_URL}/api/v1`,
@@ -57,7 +67,6 @@ const baseQueryWithReauth = async (
   extraOptions: any
 ) => {
   let result = await baseQuery(args, api, extraOptions);
-
   return result;
 };
 
@@ -94,7 +103,20 @@ export const api = createApi({
         method: "PUT",
         body,
       }),
-    })
+    }),
+    getMyPost: builder.query<ApiResponse<any>, any>({
+      query: ({ page, limit }) => ({
+        url: `/post/mypost`,
+        method: "GET",
+        params: { page, limit },
+      }),
+    }),
+    makeLikeDislike: builder.mutation<LikeApiResponse, string>({
+      query: (postId) => ({
+        url: `/post/likDislike/${postId}`,
+        method: "PUT",
+      })
+    }),
   }),
 });
 
@@ -102,5 +124,7 @@ export const {
   useGetPostsQuery,
   useGetUserDetailsQuery,
   useCreatePostMutation,
-  useUpdateUserMutation
+  useUpdateUserMutation,
+  useGetMyPostQuery,
+  useMakeLikeDislikeMutation
 } = api;

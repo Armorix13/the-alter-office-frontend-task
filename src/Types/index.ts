@@ -17,7 +17,7 @@ interface User {
 export interface ApiResponseUserData<_T> {
     success: boolean;
     message: string;
-    userExists: User;
+    userExists: User;   
 }
 
 

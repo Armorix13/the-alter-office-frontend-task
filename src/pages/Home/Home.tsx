@@ -2,56 +2,68 @@ import FeedCard from "../../components/Feeds/FeedCard";
 import AddPost from "../../components/Post/AddPost";
 import Hamburger from "../../assets/Icon/Hamburger.png";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MobileMenu from "../../components/Sidebar/MobileMenu";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { BASE_URL } from "../../api/index";
 import Profile from "../../assets/Sidebar/profile.png";
-import { useGetPostsQuery } from "../../api";
+import { BASE_URL, LIMIT, useGetPostsQuery } from "../../api";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {
-  appendPosts,
-  setHasMore,
-  setPagination,
-} from "../../Redux/reducers/feedSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+
+interface ApiResponse<T> {
+  data: T;
+  message: string;
+  success: boolean;
+  posts?: any[];
+  pagination?: {
+    totalPosts: number;
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+  };
+}
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
-  const [openMenu, closeMenu] = useState<Boolean>(false);
-  const handleMenuToggle = () => {
-    closeMenu(!openMenu);
-  };
-  const { posts, hasMore, currentPage, totalPages } = useSelector(
-    (state: RootState) => state.feed
-  );
-  
-  const [page, setPage] = useState(currentPage);
+  const { userDetail } = useSelector((state: RootState) => state.user);
+  const [openMenu, setMenu] = useState(false);
+  const [page, setPage] = useState(1);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(false);
 
-  const { data: postdata ,isFetching} = useGetPostsQuery({
+  const { data: postdata, isFetching } = useGetPostsQuery({
     page,
-    limit: 2,
+    limit: LIMIT,
   });
 
+  const handleMenuToggle = () => {
+    setMenu((prev) => !prev);
+  };
+
+  const handleAppendPost = useCallback(
+    (data: ApiResponse<any[]>) => {
+      setPosts((prevState) => {
+        const newPosts = data.posts || [];
+        const uniquePosts = newPosts.filter(
+          (post) => !prevState.some((existingPost) => existingPost._id === post._id)
+        );
+        const updatedPosts = [...prevState, ...uniquePosts];
+        setHasMore(updatedPosts.length < (data.pagination?.totalPosts || 0));
+        return updatedPosts;
+      });
+    },
+    [postdata]
+  );
+
+
   useEffect(() => {
-    if (postdata) {
-      dispatch(appendPosts(postdata.posts));
-      dispatch(
-        setPagination({
-          currentPage: postdata.currentPage,
-          totalPages: postdata.totalPages,
-        })
-      );
-      dispatch(setHasMore(postdata.currentPage < postdata.totalPages));
+    if (postdata?.posts) {
+      handleAppendPost(postdata);
     }
-  }, [postdata, dispatch ,isFetching]);
-  
-  
+  }, [postdata, handleAppendPost]);
 
   const fetchMoreData = () => {
-    if (page < totalPages && !isFetching) {
+    if (hasMore && !isFetching) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -79,46 +91,34 @@ const Home = () => {
           />
         </div>
         <AddPost />
-        <div className="font-extrabold text-[30x] mt-10">Feeds</div>
-        <div className="grid grid-cols-1 mt-[30px] gap-4">
+        <div className="font-extrabold text-[25px] my-5">Feeds</div>
+        <div
+          id="scrollableDiv"
+          className="grid grid-cols-1 gap-4 overflow-y-auto"
+        >
           <InfiniteScroll
             dataLength={posts.length}
             next={fetchMoreData}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
-            scrollThreshold={0.9}
             scrollableTarget="scrollableDiv"
+            scrollThreshold={0.9}
           >
-            <div
-              id="scrollableDiv"
-              className="grid grid-cols-1 mt-[30px] gap-4"
-            >
-              {posts.map((post: any) => (
-                <FeedCard
-                  key={post._id}
-                  username={post.userId.fullName}
-                  userImage={post.userId.profileImage}
-                  postTime={post.createdAt}
-                  content={post.desc}
-                  hashtags={post.hashtags}
-                  imageUrls={post.images}
-                  likes={post.likeCount}
-                />
-              ))}
-            </div>
+            {posts.map((post: any, index) => (
+              <FeedCard
+                key={index}
+                username={post.userId.fullName}
+                userImage={post.userId.profileImage}
+                postTime={post.createdAt}
+                content={post.desc}
+                hashtags={post.hashtags}
+                imageUrls={post.images}
+                likes={post.likeCount}
+                isLiked={post.haveILiked}
+                _id={post._id}
+              />
+            ))}
           </InfiniteScroll>
-          {/* {postdata?.posts?.map((post: any) => (
-            <FeedCard
-              key={post.id}
-              username={post.userId.fullName}
-              userImage={post.userId.profileImage}
-              postTime={post.createdAt}
-              content={post.desc}
-              hashtags={post.hashtags}
-              imageUrls={post.images}
-              likes={post.likeCount}
-            />
-          ))} */}
         </div>
       </div>
       {openMenu && <MobileMenu />}

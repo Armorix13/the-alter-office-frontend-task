@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import { useCreatePostMutation } from "../../api";
+import Loader from "../../components/Loader/Loader";
 
 const Create = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Create = () => {
   const [currentIndex, setCurrentindex] = useState<number>(0);
   const [bio, setBio] = useState<string>("");
 
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { isLoading }] = useCreatePostMutation();
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,16 +50,17 @@ const Create = () => {
     setCurrentindex(swiper.activeIndex);
   };
 
-  const handlePost = async() => {
+  const handlePost = async () => {
     try {
       const formData = new FormData();
       formData.append("desc", bio);
       mediaFiles.forEach((file) => {
         formData.append(`images`, file);
       });
-      const response =await createPost(formData).unwrap();
+      const response = await createPost(formData).unwrap();
       if (response) {
         console.log("Post created successfully:", response);
+        handleBack();
       }
     } catch (error) {
       console.error("Error creating post:", error);
@@ -68,6 +70,11 @@ const Create = () => {
   return (
     <>
       <div className="relative w-full min-h-screen items-center flex flex-col">
+        {isLoading && (
+          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50">
+            <Loader />
+          </div>
+        )}
         <div className="w-full">
           <div className="cursor-pointer flex">
             <img
@@ -148,9 +155,14 @@ const Create = () => {
               <MediaOption image={CameraIcon} content="Camera" />
             </div>
 
-            <button onClick={handlePost} className="bg-black mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]">
+            <button
+              disabled={bio === "" && mediaFiles.length === 0}
+              onClick={handlePost}
+              className={` ${bio === "" && mediaFiles.length === 0 ? "bg-gray-600" : "bg-black"} mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]`}
+            >
               Create
             </button>
+
 
           </div>
 
