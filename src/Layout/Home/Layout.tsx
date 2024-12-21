@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import RightSideBar from "../../components/Sidebar/RightSideBar";
 import { useEffect } from "react";
@@ -8,11 +8,18 @@ import { useGetUserDetailsQuery } from "../../api";
 
 const Layout = () => {
   const dispatch = useDispatch();
-  const { data: userData } = useGetUserDetailsQuery();
+  const navigate = useNavigate();
+  const { data: userData, isError } = useGetUserDetailsQuery();
   useEffect(() => {
+    if (isError) {
+      console.log("here", isError);
+      navigate("/");
+      dispatch(setAuthenticated(false));
+    }
     if (userData) {
-      dispatch(setUserDetail(userData?.userExists));
+      console.log("user data", userData);
       dispatch(setAuthenticated(true));
+      dispatch(setUserDetail(userData?.userExists));
     }
   }, [userData]);
 

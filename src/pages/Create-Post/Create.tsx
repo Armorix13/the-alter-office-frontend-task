@@ -11,6 +11,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import { useCreatePostMutation } from "../../api";
 import Loader from "../../components/Loader/Loader";
+import useVideoInViewport from "../../hooks/useViewPort";
 
 const Create = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const Create = () => {
   );
   const [currentIndex, setCurrentindex] = useState<number>(0);
   const [bio, setBio] = useState<string>("");
+
+  const { videoRef } = useVideoInViewport();
 
   const [createPost, { isLoading }] = useCreatePostMutation();
 
@@ -115,7 +118,8 @@ const Create = () => {
                   return (
                     <SwiperSlide key={`video-${index}`}>
                       <video
-                        controls
+                        ref={videoRef}
+                        loop
                         autoPlay={currentPlayingVideo === index}
                         onPlay={() => setCurrentPlayingVideo(index)}
                         onPause={() =>
@@ -155,13 +159,15 @@ const Create = () => {
               <MediaOption image={CameraIcon} content="Camera" />
             </div>
 
-            <button
-              disabled={bio === "" && mediaFiles.length === 0}
-              onClick={handlePost}
-              className={` ${bio === "" && mediaFiles.length === 0 ? "bg-gray-600" : "bg-black"} mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]`}
-            >
-              Create
-            </button>
+            <div className="w-full flex justify-center items-center">
+              <button
+                disabled={bio === "" && mediaFiles.length === 0}
+                onClick={handlePost}
+                className={` ${bio === "" && mediaFiles.length === 0 ? "bg-gray-600" : "bg-black"} mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]`}
+              >
+                Create
+              </button>
+            </div>
 
 
           </div>

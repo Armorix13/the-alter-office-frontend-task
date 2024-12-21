@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Home/Layout";
+import PublicRoute from "../Route/PublicRoute";
+import ProtectedRoute from "../Route/ProtectedRoute";
 
 // Lazy loading
 const Auth = lazy(() => import("../pages/Auth/Auth"));
@@ -12,7 +14,11 @@ const Create = lazy(() => import("../pages/Create-Post/Create"));
 const Router = createBrowserRouter([
   {
     path: "/",
-    element: <Auth />,
+    element: (
+      <PublicRoute>
+        <Auth />
+      </PublicRoute>
+    ),
   },
   {
     path: "/home",
@@ -20,23 +26,43 @@ const Router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />,
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "feeds",
-        element: <Home />
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "profile",
-        element: <Profile />
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "edit-profile",
-        element: <EditProfile />
+        element: (
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "create-post",
-        element: <Create />
+        element: (
+          <ProtectedRoute>
+            <Create />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

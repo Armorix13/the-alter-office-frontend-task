@@ -29,4 +29,15 @@ export const styleHashtags = (text: string): string => {
   }).join('');
 };
 
+export const getMediaType = (url: string): 'image' | 'video' => {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  const videoExtensions = ['.mp4', '.webm', '.avi', '.mov'];
 
+  if (imageExtensions.some(ext => url.endsWith(ext))) {
+    return 'image';
+  } else if (videoExtensions.some(ext => url.endsWith(ext))) {
+    return 'video';
+  } else {
+    return 'image';
+  }
+};

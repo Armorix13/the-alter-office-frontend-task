@@ -4,54 +4,69 @@ import Back from "../../assets/Icon/Back.png";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { BASE_URL } from "../../api/index";
+import { BASE_URL, LIMIT, useGetMyPostQuery } from "../../api/index";
 import Cover from "../../assets/Profile/Cover.png";
 import Profile from "../../assets/Sidebar/profile.png";
+import { useCallback, useEffect, useState } from "react";
 
-const posts = [
-  {
-    id: 1,
-    image:
-      "https://images.pexels.com/photos/957769/pexels-photo-957769.jpeg?auto=compress&cs=tinysrgb&w=600",
-    title: "Design meet",
-    likes: 67,
-    size: "small",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.pexels.com/photos/26795650/pexels-photo-26795650/free-photo-of-close-up-of-a-couples-hands.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "Working on a B2B...",
-    likes: 40,
-    size: "large",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.pexels.com/photos/5912024/pexels-photo-5912024.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
-    title: "Parachute ❤️",
-    likes: 65,
-    size: "large",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.pexels.com/photos/16021141/pexels-photo-16021141/free-photo-of-photo-of-25-de-abril-bridge-lisbon-portugal.jpeg?auto=compress&cs=tinysrgb&w=600",
-    title: "Parachute ❤️",
-    likes: 65,
-    size: "large",
-  },
-  {
-    id: 5,
-    image:
-      "https://images.pexels.com/photos/7670035/pexels-photo-7670035.jpeg?auto=compress&cs=tinysrgb&w=600",
-    title: "Parachute ❤️",
-    likes: 65,
-    size: "large",
-  },
-];
+
+interface ApiResponse<T> {
+  data: T;
+  message: string;
+  success: boolean;
+  posts?: any[];
+  pagination?: {
+    totalPosts: number;
+    currentPage: number;
+    totalPages: number;
+    limit: number;
+  };
+}
 
 const ProfilePage = () => {
+
+  const [page, setPage] = useState(1);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(false);
+
+  const { data: postdata, isFetching } = useGetMyPostQuery({
+    page,
+    limit: LIMIT,
+  });
+
+
+
+  const handleAppendPost = useCallback(
+    (data: ApiResponse<any[]>) => {
+      setPosts((prevState) => {
+        const newPosts = data.posts || [];
+        const uniquePosts = newPosts.filter(
+          (post) => !prevState.some((existingPost) => existingPost._id === post._id)
+        );
+        const updatedPosts = [...prevState, ...uniquePosts];
+        setHasMore(updatedPosts.length < (data.pagination?.totalPosts || 0));
+        return updatedPosts;
+      });
+    },
+    [postdata]
+  );
+
+
+  useEffect(() => {
+    if (postdata?.posts) {
+      handleAppendPost(postdata);
+    }
+  }, [postdata, handleAppendPost]);
+
+  const fetchMoreData = () => {
+    if (hasMore && !isFetching) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  fetchMoreData();
+
+
   const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const renderPosts = () => {
@@ -65,17 +80,16 @@ const ProfilePage = () => {
         const size = pattern[i];
         const post = posts[postIndex];
         elements.push(
-          <div key={post.id} className={`w-1/2 p-2`}>
+          <div key={post._id} className={`w-1/2 p-2`}>
             <PostCard
-              image={post.image}
-              title={post.title}
-              likes={post.likes}
+              image={post.images}
+              title={post.desc}
+              likes={post.likeCount}
               size={size}
               id={i}
             />
           </div>
         );
-
         postIndex++;
       }
     }
@@ -117,7 +131,9 @@ const ProfilePage = () => {
         </div>
       </div>
       <div className="text-[18px] font-[600] m-2">My Posts</div>
-      <div className="flex flex-wrap -m-2">{renderPosts()}</div>
+      <div className="flex flex-wrap -m-2">
+        {renderPosts()}
+      </div>
     </div>
   );
 };

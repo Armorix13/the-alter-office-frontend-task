@@ -1,81 +1,76 @@
-// import React, /* { useEffect  */} from "react";
+import React/* , { useState }  */ from "react";
 import LoginImage from "../../assets/Login/Login.png";
 import Google from "../../assets/Login/Google.png";
-// import { useNavigate } from "react-router-dom";
-import { signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { signInWithPopup, /* signInWithEmailAndPassword, createUserWithEmailAndPassword */ } from "firebase/auth";
 import { auth, googleauthProvider } from "../../Firebase/Firebase";
-// import { usePostApi } from "../../hooks/usePost";
-// import { toast } from "react-toastify";
-// import { useDispatch } from "react-redux";
-// import { setAuthenticated } from "../../Redux/reducers/userSlice";
+import { useSocialLoginMutation } from "../../api";
+import { toast } from "react-toastify";
+import { setAuthenticated } from "../../Redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
 
-// interface LoginRequest {
-//     fullName: string | null;
-//     socialId: string | null;
-//     socialType: number;
-//     email: string | null;
-//     profileImage: string | null;
-//     isEmailVerified: boolean;
-// }
-
-// interface LoginResponse {
-//     success: boolean;
-//     message: string;
-//     userExists: {
-//         _id: string;
-//         fullName: string;
-//         profileImage: string;
-//         coverImage: string;
-//         boi: string;
-//         isEmailVerified: boolean;
-//         socialId: string;
-//         socialType: number;
-//         isDeleted: boolean;
-//         createdAt: string;
-//         updatedAt: string;
-//         __v: number;
-//     };
-//     token: string;
-// }
+interface LoginRequest {
+    fullName: string | null;
+    socialId: string | null;
+    socialType: number;
+    email: string | null;
+    isEmailVerified: boolean;
+}
 
 const Auth: React.FC = () => {
-    // const dispatch = useDispatch();
-    // const { executePost, data } = usePostApi<LoginRequest, LoginResponse>();
-    // const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    // const [email, setEmail] = useState("");
+    // const [password, setPassword] = useState("");
+    // const [error, setError] = useState("");
+    const [useSocialLogin] = useSocialLoginMutation();
+
     const handleGoogleLogin = async () => {
         try {
             const result = await signInWithPopup(auth, googleauthProvider);
             if (result) {
                 console.log("Google login successful:", result);
-                // const loginData: LoginRequest = {
-                //     fullName: result.user.displayName,
-                //     socialId: result.user.uid,
-                //     socialType: 1,
-                //     email: result.user.email,
-                //     profileImage: result.user.photoURL,
-                //     isEmailVerified: result.user.emailVerified,
-                // };
-                // await executePost(socialLogin , loginData);
+                const loginData: LoginRequest = {
+                    fullName: result.user.displayName,
+                    socialId: result.user.uid,
+                    socialType: 1,
+                    email: result.user.email,
+                    isEmailVerified: result.user.emailVerified,
+                };
+                const res = await useSocialLogin(loginData).unwrap();
+                if (res) {
+                    localStorage.setItem("token", res.token);
+                    navigate("/home");
+                    toast.success("Login successful!");
+                    dispatch(setAuthenticated(true));
+                }
             }
         } catch (error) {
             console.error("Error during Google login:", error);
         }
     };
 
-    // useEffect(() => {
-    //     if (data) {
-    //         console.log("API response:", data);
-    //         if (data.success) {
-    //             dispatch(setAuthenticated(true));
-    //             localStorage.setItem("token", data.token);
-    //             toast.success(data?.message);
-    //             navigate("/home");
-    //         } else {
-    //             console.error("Login failed:", data.message);
-    //         }
+    // const handleEmailLogin = async () => {
+    //     try {
+    //         await signInWithEmailAndPassword(auth, email, password);
+    //         toast.success("Login successful!");
+    //         navigate("/home");
+    //     } catch (error: any) {
+    //         setError("Invalid email or password.");
+    //         console.error("Email login failed:", error);
     //     }
-    // }, [data, navigate]);
-    
+    // };
+
+    // const handleEmailRegister = async () => {
+    //     try {
+    //         await createUserWithEmailAndPassword(auth, email, password);
+    //         toast.success("Registration successful!");
+    //         navigate("/home");
+    //     } catch (error: any) {
+    //         setError("Error registering: " + error.message);
+    //         console.error("Email registration failed:", error);
+    //     }
+    // };
 
     return (
         <div className="h-screen w-screen flex justify-center items-center bg-[#444444]">
@@ -99,7 +94,6 @@ const Auth: React.FC = () => {
                             Moments That Matter, Shared Forever.
                         </div>
                     </div>
-
                     <div
                         onClick={handleGoogleLogin}
                         className="text-white mt-7 cursor-pointer flex p-2 gap-2 justify-center items-center w-[232px] sm:w-[200px] md:w-[220px] lg:w-[250px] h-[50px] bg-black rounded-full"
@@ -116,7 +110,6 @@ const Auth: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
                 <img
                     src={LoginImage}
                     alt="login"

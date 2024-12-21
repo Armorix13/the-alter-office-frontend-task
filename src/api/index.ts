@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ApiResponseUserData } from "../Types";
+import { ApiResponseUserData, LoginResponse } from "../Types";
 
 
 export const BASE_URL = `http://44.196.8.152:8000`;
@@ -117,6 +117,13 @@ export const api = createApi({
         method: "PUT",
       })
     }),
+    socialLogin: builder.mutation<LoginResponse, any>({
+      query: (body) => ({
+        url: `/user/social_login`,
+        method: "POST",
+        body
+      })
+    }),
   }),
 });
 
@@ -126,5 +133,6 @@ export const {
   useCreatePostMutation,
   useUpdateUserMutation,
   useGetMyPostQuery,
-  useMakeLikeDislikeMutation
+  useMakeLikeDislikeMutation,
+  useSocialLoginMutation
 } = api;

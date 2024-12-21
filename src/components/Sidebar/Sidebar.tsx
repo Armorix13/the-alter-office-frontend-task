@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import Profile from "../../assets/Sidebar/profile.png";
 import { BASE_URL } from "../../api";
+import { IoIosLogOut } from "react-icons/io";
+
 
 
 interface SidebarItemType {
@@ -25,6 +27,11 @@ const Sidebar: React.FC = () => {
       path: "/home/profile",
       content: "Profile",
       icon: <FaUserAlt />,
+    },
+    {
+      path: "/",
+      content: "Logout",
+      icon: <IoIosLogOut />,
     },
   ];
   return (
