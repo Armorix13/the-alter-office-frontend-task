@@ -10,18 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 
-interface ApiResponse<T> {
-  data: T;
-  message: string;
-  success: boolean;
-  posts?: any[];
-  pagination?: {
-    totalPosts: number;
-    currentPage: number;
-    totalPages: number;
-    limit: number;
-  };
-}
+
 
 const Home = () => {
   const navigate = useNavigate();

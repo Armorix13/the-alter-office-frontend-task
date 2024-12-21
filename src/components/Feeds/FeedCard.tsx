@@ -19,18 +19,6 @@ import { toast } from "react-toastify";
 import AllImageModal from "../All-Media/AllImage";
 import useVideoInViewport from "../../hooks/useViewPort";
 
-interface FeedCardProps {
-  username: string;
-  postTime: string;
-  content: string;
-  hashtags: string;
-  userImage?: string;
-  imageUrls: string[];
-  likes: number;
-  isLiked?: boolean | any;
-  _id?: string;
-}
-
 const FeedCard: React.FC<FeedCardProps> = ({
   username,
   postTime,

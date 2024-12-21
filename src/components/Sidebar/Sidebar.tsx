@@ -8,13 +8,6 @@ import { BASE_URL } from "../../api";
 import { IoIosLogOut } from "react-icons/io";
 
 
-
-interface SidebarItemType {
-  path: string;
-  content: string;
-  icon: React.ReactNode;
-}
-
 const Sidebar: React.FC = () => {
   const { userDetail } = useSelector((state: RootState) => state.user);
   const list: SidebarItemType[] = [

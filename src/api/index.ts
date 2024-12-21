@@ -1,30 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ApiResponseUserData, LoginResponse } from "../Types";
 
-
-export const BASE_URL = `http://44.196.8.152:8000`;
-
-interface ApiResponse<T> {
-  data: T;
-  message: string;
-  success: boolean;
-  posts?: any;
-  currentPage?: number | any,
-  totalPages?: number | any,
-  limit?: number | any,
-  pagination?: {
-    totalPosts: number,
-    currentPage: number,
-    totalPages: number,
-    limit: number,
-  }
-}
-
-interface LikeApiResponse {
-  message: string;
-  success: boolean;
-}
-
+export const BASE_URL = `https://44.196.8.152:8000`;
 
 enum Tags {
   Posts = "Posts"
@@ -104,11 +80,10 @@ export const api = createApi({
         body,
       }),
     }),
-    getMyPost: builder.query<ApiResponse<any>, any>({
-      query: ({ page, limit }) => ({
+    getMyPost: builder.query<ApiResponse<any>, void>({
+      query: () => ({
         url: `/post/mypost`,
-        method: "GET",
-        params: { page, limit },
+        method: "GET"
       }),
     }),
     makeLikeDislike: builder.mutation<LikeApiResponse, string>({

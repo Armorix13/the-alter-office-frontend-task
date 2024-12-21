@@ -9,14 +9,6 @@ import { toast } from "react-toastify";
 import { setAuthenticated } from "../../Redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 
-interface LoginRequest {
-    fullName: string | null;
-    socialId: string | null;
-    socialType: number;
-    email: string | null;
-    isEmailVerified: boolean;
-}
-
 const Auth: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();

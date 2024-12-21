@@ -4,11 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { setAuthenticated } from '../../Redux/reducers/userSlice';
 import { toast } from 'react-toastify';
 
-interface SidebarItemProps {
-  path: string;
-  content: string;
-  icon: React.ReactNode;
-}
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ path, content, icon }) => {
   const navigate = useNavigate();

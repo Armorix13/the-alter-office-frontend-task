@@ -1,10 +1,6 @@
 import React from "react";
 import Profile from "../../assets/Sidebar/profile.png";
 
-interface SuggestedUserCardProps {
-  name: string;
-  photoUrl: string;
-}
 
 const SuggestedUserCard: React.FC<SuggestedUserCardProps> = ({
   name

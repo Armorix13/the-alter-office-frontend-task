@@ -4,68 +4,20 @@ import Back from "../../assets/Icon/Back.png";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { BASE_URL, LIMIT, useGetMyPostQuery } from "../../api/index";
+import { BASE_URL, useGetMyPostQuery } from "../../api/index";
 import Cover from "../../assets/Profile/Cover.png";
 import Profile from "../../assets/Sidebar/profile.png";
-import { useCallback, useEffect, useState } from "react";
-
-
-interface ApiResponse<T> {
-  data: T;
-  message: string;
-  success: boolean;
-  posts?: any[];
-  pagination?: {
-    totalPosts: number;
-    currentPage: number;
-    totalPages: number;
-    limit: number;
-  };
-}
+import { useEffect, useState } from "react";
 
 const ProfilePage = () => {
-
-  const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<any[]>([]);
-  const [hasMore, setHasMore] = useState(false);
-
-  const { data: postdata, isFetching } = useGetMyPostQuery({
-    page,
-    limit: LIMIT,
-  });
-
-
-
-  const handleAppendPost = useCallback(
-    (data: ApiResponse<any[]>) => {
-      setPosts((prevState) => {
-        const newPosts = data.posts || [];
-        const uniquePosts = newPosts.filter(
-          (post) => !prevState.some((existingPost) => existingPost._id === post._id)
-        );
-        const updatedPosts = [...prevState, ...uniquePosts];
-        setHasMore(updatedPosts.length < (data.pagination?.totalPosts || 0));
-        return updatedPosts;
-      });
-    },
-    [postdata]
-  );
-
+  const { data: postdata } = useGetMyPostQuery();
 
   useEffect(() => {
     if (postdata?.posts) {
-      handleAppendPost(postdata);
+      setPosts(postdata?.posts);
     }
-  }, [postdata, handleAppendPost]);
-
-  const fetchMoreData = () => {
-    if (hasMore && !isFetching) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  fetchMoreData();
-
+  }, [postdata]);
 
   const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();

@@ -3,7 +3,6 @@ import AddIcon from "../../assets//Icon/Add.png";
 
 const AddPost = () => {
   const navigate = useNavigate();
-
   const handlePost = (): void => {
     navigate("/home/create-post");
   };

@@ -6,14 +6,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 
-interface PostCardProps {
-    image: string[];
-    title: string;
-    likes: number;
-    size?: string;
-    id: number;
-}
-
 const PostCard: React.FC<PostCardProps> = ({ image, title, likes }) => {
     const { videoRef } = useVideoInViewport();
     const [currentIndex, setCurrentindex] = useState<number>(0);

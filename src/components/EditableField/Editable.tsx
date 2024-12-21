@@ -1,14 +1,5 @@
 import React from "react";
 
-interface EditableFieldProps {
-    id: string;
-    label: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    placeholder: string;
-    type?: "text" | "textarea";
-}
-
 const EditableField: React.FC<EditableFieldProps> = ({
     id,
     label,

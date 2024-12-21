@@ -1,11 +1,4 @@
-import React, { ReactNode } from "react";
-
-interface ReusableModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title?: string;
-    children: ReactNode;
-}
+import React from "react";
 
 const Modal: React.FC<ReusableModalProps> = ({
     isOpen,

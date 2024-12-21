@@ -5,16 +5,8 @@ import { BASE_URL } from '../../api';
 import { getMediaType } from '../../utils';
 import useVideoInViewport from '../../hooks/useViewPort';
 
-interface AllImageModalProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-  images: string[];
-}
-
 const AllImageModal: React.FC<AllImageModalProps> = ({ onClose, images }) => {
-
   const { videoRef } = useVideoInViewport();
-
   return (
     <div className="modal-overlay">
       <div className="modal-content max-720:w-[330px] w-[700px]">
