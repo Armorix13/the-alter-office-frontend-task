@@ -41,15 +41,15 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
   const { videoRef } = useVideoInViewport();
 
-  const socialPlatforms = [
-    { name: "Twitter", icon: TwitterIcon, url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(content)}&url=http://localhost:5173/feeds/${_id}` },
-    { name: "Facebook", icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=http://localhost:5173/feeds/${_id}` },
-    { name: "Reddit", icon: RedditIcon, url: `https://www.reddit.com/submit?url=http://localhost:5173/feeds/${_id}&title=${encodeURIComponent(content)}` },
-    { name: "Discord", icon: DiscordIcon, url: `https://discord.com/channels/@me?text=${encodeURIComponent(content)}%20http://localhost:5173/feeds/${_id}` },
-    { name: "WhatsApp", icon: WhatsappIcon, url: `https://api.whatsapp.com/send?text=${encodeURIComponent(content)}%20http://localhost:5173/feeds/${_id}` },
-    { name: "Messenger", icon: MessengerIcon, url: `https://www.messenger.com/t/?text=${encodeURIComponent(content)}%20http://localhost:5173/feeds/${_id}` },
-    { name: "Telegram", icon: TelegramIcon, url: `https://t.me/share/url?url=http://localhost:5173/feeds/${_id}&text=${encodeURIComponent(content)}` },
-    { name: "Instagram", icon: InstagramIcon, url: `https://www.instagram.com/?url=http://localhost:5173/feeds/${_id}` },
+   const socialPlatforms = [
+    { name: "Twitter", icon: TwitterIcon, url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(content)}&url=https://the-alter-office.netlify.app/home/share/${_id}` },
+    { name: "Facebook", icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=https://the-alter-office.netlify.app/home/share/${_id}` },
+    { name: "Reddit", icon: RedditIcon, url: `https://www.reddit.com/submit?url=https://the-alter-office.netlify.app/home/share/${_id}&title=${encodeURIComponent(content)}` },
+    { name: "Discord", icon: DiscordIcon, url: `https://discord.com/channels/@me?text=${encodeURIComponent(content)}%20https://the-alter-office.netlify.app/home/share/${_id}` },
+    { name: "WhatsApp", icon: WhatsappIcon, url: `https://api.whatsapp.com/send?text=${encodeURIComponent(content)}%20https://the-alter-office.netlify.app/home/share/${_id}` },
+    { name: "Messenger", icon: MessengerIcon, url: `https://www.messenger.com/t/?text=${encodeURIComponent(content)}%20https://the-alter-office.netlify.app/home/share/${_id}` },
+    { name: "Telegram", icon: TelegramIcon, url: `https://t.me/share/url?url=https://the-alter-office.netlify.app/home/share/${_id}&text=${encodeURIComponent(content)}` },
+    { name: "Instagram", icon: InstagramIcon, url: `https://www.instagram.com/?url=https://the-alter-office.netlify.app/home/share/${_id}` },
   ];
 
   const styleHashtags = (text: string) => {
