@@ -9,6 +9,7 @@ import { BASE_URL, LIMIT, useGetPostsQuery } from "../../api";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
+import Loader from "../../components/Loader/Loader";
 
 
 
@@ -20,7 +21,7 @@ const Home = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(false);
 
-  const { data: postdata, isFetching } = useGetPostsQuery({
+  const { data: postdata, isFetching, isLoading } = useGetPostsQuery({
     page,
     limit: LIMIT,
   });
@@ -29,12 +30,13 @@ const Home = () => {
     setMenu((prev) => !prev);
   };
 
+
   const handleAppendPost = useCallback(
     (data: ApiResponse<any[]>) => {
       setPosts((prevState) => {
         const newPosts = data.posts || [];
         const uniquePosts = newPosts.filter(
-          (post) => !prevState.some((existingPost) => existingPost._id === post._id)
+          (post: any) => !prevState.some((existingPost) => existingPost._id === post._id)
         );
         const updatedPosts = [...prevState, ...uniquePosts];
         setHasMore(updatedPosts.length < (data.pagination?.totalPosts || 0));
@@ -81,6 +83,13 @@ const Home = () => {
         </div>
         <AddPost />
         <div className="font-extrabold text-[25px] my-5">Feeds</div>
+        {
+          isLoading && (
+            <div className="absolute inset-0 flex justify-center items-center bg-slate-300 bg-opacity-5 z-10">
+              <Loader />
+            </div>
+          )
+        }
         <div
           id="scrollableDiv"
           className="grid grid-cols-1 gap-4 overflow-y-auto"
@@ -109,8 +118,8 @@ const Home = () => {
             ))}
           </InfiniteScroll>
         </div>
+        {openMenu && <MobileMenu />}
       </div>
-      {openMenu && <MobileMenu />}
     </>
   );
 };

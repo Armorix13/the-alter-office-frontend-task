@@ -18,9 +18,7 @@ const Edit = () => {
   const { userDetail } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [name, setName] = useState<string | any>(userDetail?.fullName);
-  const [bio, setBio] = useState<string>(
-    "Just someone who loves designing, sketching, and finding beauty in the little things 💕"
-  );
+  const [bio, setBio] = useState<string>(userDetail?.boi);
   const [loading, setLoading] = useState<boolean>(false);
   const [coverImage, setCoverImage] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
@@ -73,6 +71,7 @@ const Edit = () => {
 
   useEffect(() => {
     setName(userDetail?.fullName);
+    setBio(userDetail?.boi);
   }, [userDetail]);
 
   return (

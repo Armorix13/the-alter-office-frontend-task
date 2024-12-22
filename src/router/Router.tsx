@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Home/Layout";
 import PublicRoute from "../Route/PublicRoute";
 import ProtectedRoute from "../Route/ProtectedRoute";
+import Share from "../pages/Share/Share";
 
 // Lazy loading
 const Auth = lazy(() => import("../pages/Auth/Auth"));
@@ -61,6 +62,14 @@ const Router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Create />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "share/:id",
+        element: (
+          <ProtectedRoute>
+            <Share />
           </ProtectedRoute>
         ),
       },

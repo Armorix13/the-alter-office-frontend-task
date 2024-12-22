@@ -16,7 +16,7 @@ const MobileMenu = () => {
     navigate("/");
   }
   return (
-    <div className="fixed top-[70px] left-[80px] w-auto shadow-md rounded-[8px] bg-red-300 p-2 max-lg:top-[80px] max-md:top-[55px] z-[99] sm:block hidden">
+    <div className="fixed top-[70px] left-[80px] w-auto shadow-md rounded-[8px] bg-red-300 p-2 max-lg:top-[80px] max-md:top-[55px] z-[99] max-720:block hidden">
       <div
         onClick={() => navigate("/home/feeds")}
         className="flex items-center gap-1 cursor-pointer"

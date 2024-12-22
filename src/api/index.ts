@@ -99,6 +99,12 @@ export const api = createApi({
         body
       })
     }),
+    getPostById: builder.query<ApiResponse<any>, string>({
+      query: (id) => ({
+        url: `/post/get/${id}`,
+        method: "GET"
+      }),
+    }),
   }),
 });
 
@@ -109,5 +115,6 @@ export const {
   useUpdateUserMutation,
   useGetMyPostQuery,
   useMakeLikeDislikeMutation,
-  useSocialLoginMutation
+  useSocialLoginMutation,
+  useGetPostByIdQuery
 } = api;

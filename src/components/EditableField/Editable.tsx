@@ -18,8 +18,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
                     id={id}
                     value={value}
                     onChange={onChange}
-                    rows={1}
-                    className="border-0 focus:outline-none text-[14px] font-[600] border-b border-gray-300 text-gray-900 p-0 mt-1 text-base resize-none"
+                    className="border-0 focus:outline-none text-[14px] font-[600] border-b border-gray-300 text-gray-900 p-0 mt-1 text-base max-720::min-h-[40px] md:min-h-[20px] lg:min-h-[10px] xl:min-h-[10px] resize-none"
                     placeholder={placeholder}
                 />
             ) : (

@@ -88,6 +88,7 @@ interface FeedCardProps {
     likes: number;
     isLiked?: boolean | any;
     _id?: string;
+    isShare?: boolean
 }
 
 interface MediaOptionProps {

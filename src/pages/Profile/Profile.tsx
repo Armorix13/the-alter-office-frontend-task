@@ -8,10 +8,11 @@ import { BASE_URL, useGetMyPostQuery } from "../../api/index";
 import Cover from "../../assets/Profile/Cover.png";
 import Profile from "../../assets/Sidebar/profile.png";
 import { useEffect, useState } from "react";
+import Loader from "../../components/Loader/Loader";
 
 const ProfilePage = () => {
   const [posts, setPosts] = useState<any[]>([]);
-  const { data: postdata } = useGetMyPostQuery();
+  const { data: postdata, isLoading } = useGetMyPostQuery();
 
   useEffect(() => {
     if (postdata?.posts) {
@@ -77,14 +78,23 @@ const ProfilePage = () => {
         <div className="mt-16">
           <h1 className="text-xl font-bold">{userDetail?.fullName}</h1>
           <p className="text-gray-500">
-            Just someone who loves designing, sketching, and finding beauty in
-            the little things 💞
+            {userDetail?.boi}
           </p>
         </div>
       </div>
       <div className="text-[18px] font-[600] m-2">My Posts</div>
+      {posts.length === 0 && !isLoading && (
+        <div className="text-center mt-12">
+          <p className="text-sm text-gray-500">You have not uploaded any post</p>
+        </div>
+      )}
+      {isLoading && (
+        <div className="absolute inset-0 flex justify-center items-center bg-gray-300 bg-opacity-50 z-20">
+          <Loader />
+        </div>
+      )}
       <div className="flex flex-wrap -m-2">
-        {renderPosts()}
+        {!isLoading && renderPosts()}
       </div>
     </div>
   );

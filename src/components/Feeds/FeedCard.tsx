@@ -75,7 +75,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
   };
 
   const handleCopy = (): void => {
-    const url = `http://localhost:5173/feeds/${_id}`;
+    const url = `https://the-alter-office.netlify.app/home/share/${_id}`;
     navigator.clipboard.writeText(url).then(() => {
       toast.success("Link copied to clipboard");
     }).catch((err) => {
@@ -221,7 +221,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
           <div className="mt-4">
             <p className="text-sm text-black mb-2 text-[16px] font-[600]">Page Link</p>
             <div className="flex items-center justify-between border bg-[#D9D9D9] rounded-md p-2">
-              <span className="text-xs truncate">http://localhost:5173/feeds/{_id}</span>
+              <span className="text-xs truncate">https://the-alter-office.netlify.app/home/share/{_id}</span>
               <img
                 onClick={handleCopy}
                 src={CopyIcon}
