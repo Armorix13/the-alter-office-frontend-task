@@ -11,6 +11,7 @@ import { setUserDetail } from "../../Redux/reducers/userSlice";
 import Cover from "../../assets/Profile/Cover.png";
 import Profile from "../../assets/Sidebar/profile.png";
 import { useUpdateUserMutation } from "../../api";
+import { toast } from "react-toastify";
 
 
 const Edit = () => {
@@ -60,10 +61,12 @@ const Edit = () => {
       if (response) {
         dispatch(setUserDetail(response?.userExists));
       }
-      console.log("Profile updated successfully:", response);
+      // console.log("Profile updated successfully:", response);
+      toast.success("Profile updated successfully!");
       navigate("/home/profile");
     } catch (error) {
-      console.error("Error updating profile:", error);
+      toast.error("Error updating profile:", error.message);
+      // console.error("Error updating profile:", error);
     } finally {
       setLoading(false);
     }

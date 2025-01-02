@@ -20,6 +20,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
     "react-toastify": "^11.0.1",
+    "react-webcam": "^7.2.0",
     "swiper": "^11.1.15"
   },
   "devDependencies": {

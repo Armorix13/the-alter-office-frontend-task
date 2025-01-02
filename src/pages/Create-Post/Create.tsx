@@ -4,7 +4,7 @@ import PhotosIcon from "../../assets/create/Photos.png";
 import VideoIcon from "../../assets/create/Video.png";
 import CameraIcon from "../../assets/create/Camera.png";
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -12,10 +12,15 @@ import { Pagination } from "swiper/modules";
 import { useCreatePostMutation } from "../../api";
 import Loader from "../../components/Loader/Loader";
 import useVideoInViewport from "../../hooks/useViewPort";
+import { toast } from "react-toastify";
+import Webcam from "react-webcam";
+import Camera from "../../components/Camera/Camera";
+import { base64ToFile } from "../../utils";
 
 const Create = () => {
   const navigate = useNavigate();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<number | null>(
@@ -23,16 +28,17 @@ const Create = () => {
   );
   const [currentIndex, setCurrentindex] = useState<number>(0);
   const [bio, setBio] = useState<string>("");
-
+  const [_error, setError] = useState<string>("");
+  const webcamRef = React.useRef<Webcam>(null);
   const { videoRef } = useVideoInViewport();
 
   const [createPost, { isLoading }] = useCreatePostMutation();
-
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const fileArray = Array.from(files);
+      console.log("fileArray", fileArray);
       setMediaFiles((prevFiles) => [...prevFiles, ...fileArray]);
     }
   };
@@ -53,6 +59,33 @@ const Create = () => {
     setCurrentindex(swiper.activeIndex);
   };
 
+  const handleCameraOpen = (): void => {
+    setIsCameraOpen(true);
+  };
+
+  const capture = useCallback(async () => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        try {
+          const file = await base64ToFile(imageSrc, "camera-capture.png");
+          if (file) {
+            setMediaFiles((prevFiles) => [...prevFiles, file]);
+            setIsCameraOpen(false);
+          }
+        } catch (error) {
+          console.error("Error during image processing:", error);
+          toast.error("Failed to capture photo");
+        }
+      }
+    }
+  }, [webcamRef]);
+
+  const handleUserMediaError = (error: string | DOMException) => {
+    console.error("Camera error:", error);
+    setError(typeof error === "string" ? error : error.message);
+  };
+
   const handlePost = async () => {
     try {
       const formData = new FormData();
@@ -62,13 +95,15 @@ const Create = () => {
       });
       const response = await createPost(formData).unwrap();
       if (response) {
-        console.log("Post created successfully:", response);
+        toast.success("Post created successfully!");
+        // console.log("Post created successfully:", response);
         handleBack();
       }
     } catch (error) {
-      console.error("Error creating post:", error);
+      toast.error("Error creating post");
+      // console.error("Error creating post:", error);
     }
-  }
+  };
 
   return (
     <>
@@ -91,12 +126,16 @@ const Create = () => {
         </div>
 
         <div className="w-full flex flex-col  gap-3 justify-center items-center mb-3 mt-2">
-          <div className={`bg-[#ffffff] relative w-full rounded-[16px] ${mediaFiles.length > 0 && "h-[285px] w-full"}`}>
-            {
-              mediaFiles.length > 0 && (
-                <div className="text-[#f4f4f4] absolute max-720:right-14 max-720:top-2 right-[35%] font-bold z-10 text-[24px]">{currentIndex + 1}/{mediaFiles.length}</div>
-              )
-            }
+          <div
+            className={`bg-[#ffffff] relative w-full rounded-[16px] ${
+              mediaFiles.length > 0 && "h-[285px] w-full"
+            }`}
+          >
+            {mediaFiles.length > 0 && (
+              <div className="text-[#f4f4f4] absolute max-720:right-14 max-720:top-2 right-[35%] font-bold z-10 text-[24px]">
+                {currentIndex + 1}/{mediaFiles.length}
+              </div>
+            )}
             <Swiper
               pagination={true}
               modules={[Pagination]}
@@ -136,6 +175,20 @@ const Create = () => {
               })}
             </Swiper>
 
+            {isCameraOpen && (
+              <div
+                className={`bg-[#ffffff] relative rounded-[16px] w-full`}
+              >
+                <Camera
+                  webcamRef={webcamRef}
+                  handleUserMediaError={handleUserMediaError}
+                  capture={capture}
+                  setIsCameraOpen={setIsCameraOpen}
+                  setError={setError}
+                />
+              </div>
+            )}
+
             <div className="w-full flex">
               <textarea
                 value={bio}
@@ -156,20 +209,26 @@ const Create = () => {
                 image={VideoIcon}
                 content="Video"
               />
-              <MediaOption image={CameraIcon} content="Camera" />
+              <MediaOption
+                onChange={handleCameraOpen}
+                image={CameraIcon}
+                content="Camera"
+              />
             </div>
 
             <div className="w-full flex justify-center items-center">
               <button
                 disabled={bio === "" && mediaFiles.length === 0}
                 onClick={handlePost}
-                className={` ${bio === "" && mediaFiles.length === 0 ? "bg-gray-600" : "bg-black"} mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]`}
+                className={` ${
+                  bio === "" && mediaFiles.length === 0
+                    ? "bg-gray-600"
+                    : "bg-black"
+                } mt-20 mx-auto rounded-[36px] w-[328px] h-[48px] text-white text-[16px] font-[700]`}
               >
                 Create
               </button>
             </div>
-
-
           </div>
 
           <input
@@ -178,6 +237,7 @@ const Create = () => {
             accept="image/*"
             onChange={handleFileChange}
             className="hidden"
+            multiple
           />
           <input
             ref={videoInputRef}
@@ -185,6 +245,7 @@ const Create = () => {
             accept="video/*"
             onChange={handleFileChange}
             className="hidden"
+            multiple
           />
         </div>
       </div>

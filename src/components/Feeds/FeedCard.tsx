@@ -134,7 +134,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
               <video
                 key={index}
                 ref={videoRef}
-                className="rounded-lg h-[180px] object-cover w-[50%] md:w-full"
+                className={`rounded-lg h-[180px] object-cover ${imageUrls.length === 1 ? "w-full":"w-[50%]"} md:w-full`}
                 loop
                 muted={false}
                 autoPlay
@@ -147,13 +147,14 @@ const FeedCard: React.FC<FeedCardProps> = ({
                 key={index}
                 src={`${BASE_URL}${url}`}
                 alt={`Post Image ${index + 1}`}
-                className="rounded-lg h-[180px] object-cover w-[50%] md:w-full"
+                // className="rounded-lg h-[180px] object-cover w-[50%] md:w-full"
+                className={`rounded-lg h-[180px] object-cover ${imageUrls.length === 1 ? "w-full":"w-[50%]"} md:w-full`}
               />
             );
           })}
 
           {imageUrls.length > maxVisibleImages && (
-            <div onClick={() => setOpen(true)} className="relative h-[180px] md:w-full w-[40%] rounded-lg cursor-pointer overflow-hidden">
+            <div onClick={() => setOpen(true)} className="relative h-[180px] md:w-full w-[50%] rounded-lg cursor-pointer overflow-hidden">
               <img
                 src={`${BASE_URL}${imageUrls[maxVisibleImages]}`}
                 alt="More Images"

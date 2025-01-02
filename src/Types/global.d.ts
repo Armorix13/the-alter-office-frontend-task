@@ -23,20 +23,7 @@ interface ApiResponseUserData<_T> {
 interface LoginResponse {
     success: boolean;
     message: string;
-    userExists: {
-        _id: string;
-        fullName: string;
-        profileImage: string;
-        coverImage: string;
-        boi: string;
-        isEmailVerified: boolean;
-        socialId: string;
-        socialType: number;
-        isDeleted: boolean;
-        createdAt: string;
-        updatedAt: string;
-        __v: number;
-    };
+    userExists: User;
     token: string;
 }
 
@@ -137,48 +124,12 @@ interface LoginRequest {
     isEmailVerified: boolean;
 }
 
-interface ApiResponse<T> {
-    data: T;
-    message: string;
-    success: boolean;
-    posts?: any[];
-    pagination?: {
-        totalPosts: number;
-        currentPage: number;
-        totalPages: number;
-        limit: number;
-    };
-}
-
-interface ApiResponse<T> {
-    data: T;
-    message: string;
-    success: boolean;
-    posts?: any[];
-    pagination?: {
-        totalPosts: number;
-        currentPage: number;
-        totalPages: number;
-        limit: number;
-    };
-}
-
-interface User {
-    _id: string;
-    fullName: string;
-    profileImage: string;
-    coverImage: string;
-    boi: string;
-    isEmailVerified: boolean;
-    socialId: string;
-    socialType: number;
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-}
-
 interface UserState {
     isAuthenticated: boolean;
     userDetail: User | null;
+}
+
+interface CameraViewProps {
+    onCapture: () => void;
+    videoRef: React.RefObject<HTMLVideoElement>;
 }

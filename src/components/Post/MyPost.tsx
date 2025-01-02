@@ -22,8 +22,7 @@ const PostCard: React.FC<PostCardProps> = ({ image, title, likes }) => {
     };
 
     return (
-        <div className={`relative overflow-hidden`}>
-
+        <div className={`relative overflow-hidden ${image.length === 0 && "rounded-[16px] bg-black"}`}>
             {
                 image.length > 0 && (
                     <div className="text-[#f4f4f4] absolute max-720:text-[15px] max-720:right-2 max-720:top-2 top-2 right-[12%] font-bold z-10 text-[20px]">{currentIndex + 1}/{image.length}</div>
